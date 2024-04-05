@@ -9,28 +9,36 @@
 static void start(struct tcp_pcb *tpcb)
 {
     gpio_put(CONTROL_PIN, 1);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
     sleep_ms(200);
     gpio_put(CONTROL_PIN, 0);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
     tcp_write(tpcb, "OK\n", 3, TCP_WRITE_FLAG_COPY);
 }
 
 static void power_off(struct tcp_pcb *tpcb)
 {
     gpio_put(CONTROL_PIN, 1);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
     sleep_ms(5000);
     gpio_put(CONTROL_PIN, 0);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
     tcp_write(tpcb, "OK\n", 3, TCP_WRITE_FLAG_COPY);
 }
 
 static void reboot(struct tcp_pcb *tpcb)
 {
     gpio_put(CONTROL_PIN, 1);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
     sleep_ms(5000);
     gpio_put(CONTROL_PIN, 0);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
     sleep_ms(1000);
     gpio_put(CONTROL_PIN, 1);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 1);
     sleep_ms(200);
     gpio_put(CONTROL_PIN, 0);
+    cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, 0);
     tcp_write(tpcb, "OK\n", 3, TCP_WRITE_FLAG_COPY);
 }
 

@@ -15,6 +15,8 @@ err_t server_receive_callback(__attribute__((unused)) void *arg, struct
     } else {
         tcp_close(tpcb);
     }
+    if (p != NULL)
+        pbuf_free(p);
     return err;
 }
 
