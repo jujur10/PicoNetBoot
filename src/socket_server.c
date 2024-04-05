@@ -9,10 +9,10 @@
 err_t server_receive_callback(__attribute__((unused)) void *arg, struct
     tcp_pcb *tpcb, struct pbuf *p, err_t err)
 {
-    if (err == ERR_OK && p != NULL && p->len != 0) {
+    if (err == ERR_OK && p != NULL && p->len != 0 && tpcb != NULL) {
         execute_instruction(tpcb, p->payload);
         tcp_output(tpcb);
-    } else {
+    } else if (tpcb != NULL) {
         tcp_close(tpcb);
     }
     if (p != NULL)
