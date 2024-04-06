@@ -1,7 +1,7 @@
 # PicoNetBoot
 
 This project has for goal to be able to start, power-off and reboot over 
-Internet.
+Internet with a Raspberry Pi Pico W.
 
 ## Installation
 
