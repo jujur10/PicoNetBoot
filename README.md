@@ -41,3 +41,9 @@ commands (free to you to create a little client 🙂):
 - "POWER-OFF" : Power-off the computer.
 - "REBOOT" : Power-off and re-start the computer.
 - When communication terminated, close socket.
+
+## Demonstration
+
+Here's a short demonstration.
+
+![Demonstration](https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpiha3JVosFB985ZNpJSxaPhBcDAQXIgEQf_b5sc6rcutpgG9iwcs65bGuNJOVgAAKP_sN_ZutB57bZgUDitEYLrYjrGZm_YPCnc4=w3064-h1890)
