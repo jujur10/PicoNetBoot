@@ -46,4 +46,4 @@ commands (free to you to create a little client 🙂):
 
 Here's a short demonstration.
 
-<img src="https://lh3.googleusercontent.com/u/0/drive-viewer/AKGpiha3JVosFB985ZNpJSxaPhBcDAQXIgEQf_b5sc6rcutpgG9iwcs65bGuNJOVgAAKP_sN_ZutB57bZgUDitEYLrYjrGZm_YPCnc4=w3064-h1890" align="center"/>
+![Demonstration](https://github.com/jujur10/PicoNetBoot/assets/49812199/f0f716f7-61a4-42cc-aa4d-5ecdde524ac7)
