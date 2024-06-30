@@ -2,12 +2,17 @@
 ** Julien ROIRON, 2023
 ** socket_server.c
 ** File description:
-** Functions to initialise/use the socket server.
+** Functions which initializes and use the server socket.
 */
-#include "../include/pico_net_boot.h"
+#include "style/common_macros.h"
+#include "style/pointer.h"
+#include "pico_net_boot.h"
 
-err_t server_receive_callback(__attribute__((unused)) void *arg, struct
-    tcp_pcb *tpcb, struct pbuf *p, err_t err)
+/// @brief Function which initializes the receive function.
+///
+/// @see tcp_recv_fn
+err_t server_receive_callback(UNUSED void PTR arg,
+    struct tcp_pcb PTR tpcb, struct pbuf PTR p, err_t err)
 {
     if (err == ERR_OK && p != NULL && p->len != 0 && tpcb != NULL) {
         execute_instruction(tpcb, p->payload);
@@ -20,22 +25,32 @@ err_t server_receive_callback(__attribute__((unused)) void *arg, struct
     return err;
 }
 
-void server_error_callback(void *arg, __attribute__((unused)) err_t err)
+/// @brief Function which initializes the error function.
+///
+/// @see tcp_err_fn
+void server_error_callback(void PTR arg, UNUSED err_t err)
 {
-    struct tcp_pcb *tpcb = (struct tcp_pcb*)arg;
+    struct tcp_pcb *tpcb = (struct tcp_pcb *)arg;
 
     tcp_close(tpcb);
 }
 
-err_t server_accept_callback(__attribute__((unused)) void *arg, struct
-    tcp_pcb *newpcb, err_t err)
+/// @brief Function which initializes the accept function.
+///
+/// @see tcp_accept_fn
+err_t server_accept_callback(UNUSED void PTR arg,
+    struct tcp_pcb PTR newpcb, err_t err)
 {
     tcp_recv(newpcb, server_receive_callback);
     tcp_err(newpcb, server_error_callback);
     return err;
 }
 
-struct tcp_pcb *init_socket_connection(void)
+/// @brief Function used to initialize the server's socket and bind receive
+/// function.
+///
+/// @return The tcp pcb pointer on success, NULL on failure.
+struct tcp_pcb PTR init_socket_connection(void)
 {
     struct tcp_pcb *pcb = tcp_new_ip_type(IPADDR_TYPE_V4);
 
@@ -56,37 +71,12 @@ struct tcp_pcb *init_socket_connection(void)
     return pcb;
 }
 
-int run_socket_server(void)
+void run_socket_server(void)
 {
     struct tcp_pcb const *pcb = init_socket_connection();
 
     if (pcb == NULL)
-        return 1;
+        return;
     while (1)
         cyw43_arch_poll();
 }
-
-//            ⠀⠀⠀⠀⠀⠀⠀⠙⣿⣷⣄
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⢺⣿⣿⡆
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀⠀⠀⠀⠀⣾⢡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣿⣷⡦⠀⠀⠀⠀⢰⣿⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠃⣠⣾⡇
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣆⠀⠀⠀⣾⣿⣿⣿⣷⠄⠀⠰⠤⣀⠀⠀⣴⣿⣿⡇
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠃⢺⣿⣿⣿⣿⡄⠀⠀⣿⣿⢿⣿⣿⣦⣦⣦⣶⣼⣭⣼⣿⣿⣿⠇
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⣿⣿⣷⡆⠂⣿⣿⣞⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢙⣿⣿⣿⣿⣷⠸⣿⣿⣿⣿⣿⣿⠟⠻⣿⣿⣿⣿⡿⣿⣿⣷
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠄⢿⣿⣿⣿⣿⡄⣿⣿⣿⣿⣿⣿⡀⢀⣿⣿⣿⣿⠀⢸⣿⣿⠅
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⣿⣿⣿⣇⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢐⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿
-//            ⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁
-//            ⠀⠀⠀⠀⠀⠀⠀⢀⣴⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-//            ⠀⠀⠀⠀⠀⡀⣠⣾⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡔
-//            ⠀⠀⠀⠀⠀⢁⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣄
-//            ⠀⠀⠀⠀⠠⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣄
-//            ⠀⠀⠀⠀⣀⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡄
-//            ⠀⠀⠀⠀⣻⣿⣿⣿⣿⣿⡟⠋⠙⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠙⢿⣿⣿⣿⣿⣿⣿⣄
-//            ⠀⠀⠀⣿⣿⣿⣿⣿⡿⠋⠀⠀⠀⢿⣿⣿⣿⣿⣿⣿⠿⢿⡿⠛⠋⠁⠀⠀⠈⠻⣿⣿⣿⣿⣿⣿⣅
-//            ⠀⠀⠀⣿⣿⣿⣿⡟⠃⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⢻⣿⣿⣿⣿⣿⣤⡀
-//            ⠀⠜⢠⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⢿⣿⣿⣿⣿⣿⣗⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣿⣿⣿⣿⣦⠄⣠
-//            ⠠⢸⣿⣿⣿⣿⣿⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⣿⣿⣿⣿⢀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⣿⣿⣿⣿
-//            ⠀⠛⣿⣿⣿⡿⠏⠀⠀⠀⠀⠀⠀⢳⣾⣿⣿⣿⣿⣿⣿⡶⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿
-//            ⠀⢨⠀⠉⠉⠀⠀⠀⠀⠀⠀⠀⠀⠙⣿⣿⡿⡿⠿⠛⠙⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⠏⠉⠻⠿⠟⠁

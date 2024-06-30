@@ -21,7 +21,7 @@ set(CMAKE_CXX_STANDARD 17)
 include(pico_sdk_import.cmake)
 include_directories(include)
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release)
 
 # Project(my_project)
 project(PicoNetBoot CXX C ASM)
@@ -31,15 +31,22 @@ pico_sdk_init()
 
 # rest of your project
 add_executable(PicoNetBoot
-        src/main.c
-        src/socket_server.c
-        src/execute_instructions.c
+    src/main.c
+    src/socket_server.c
+    src/execute_instruction.c
+    src/parse_instruction.c
 )
 
 # Add pico_stdlib library which aggregates commonly used features
 target_link_libraries(PicoNetBoot
-        pico_stdlib
-        pico_cyw43_arch_lwip_poll
+    pico_stdlib
+    pico_cyw43_arch_lwip_poll
+)
+
+# Set the compile options.
+target_compile_options(PicoNetBoot PRIVATE
+    $<$<CONFIG:DEBUG>:-g3>
+    $<$<CONFIG:RELEASE>:-Ofast>
 )
 
 # USB
